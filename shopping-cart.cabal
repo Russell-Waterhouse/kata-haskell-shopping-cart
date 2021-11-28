@@ -26,6 +26,7 @@ source-repository head
 library
   exposed-modules:
       Import
+      Item
       Run
       Types
       Util
@@ -57,6 +58,7 @@ test-suite shopping-cart-test
   type: exitcode-stdio-1.0
   main-is: Spec.hs
   other-modules:
+      ItemSpec
       UtilSpec
       Paths_shopping_cart
   hs-source-dirs:
