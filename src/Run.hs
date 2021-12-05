@@ -1,28 +1,27 @@
-{-# LANGUAGE NoImplicitPrelude #-}
-{-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE NoImplicitPrelude   #-}
+{-# LANGUAGE OverloadedStrings   #-}
 {-# LANGUAGE ScopedTypeVariables #-}
 
 module Run (run) where
 
-import Import
-import Item
+import           Import
+import           Item
+import           Prelude (putStrLn)
+import           RIO
 
 run :: RIO App ()
-run = 
-  let i = createItems
-      j = show createItems
-      k :: Utf8Builder = "Items: \n"  
-  in 
-  logInfo k
-  
-
+run = do
+  let l = "Items: "
+  logInfo "Displaying Info to User"
+  liftIO $ putStrLn l
+  liftIO $ putStrLn $ prettyPrintItems createItems
 
 -- In a real application, this would be from a DB call
 -- but this is just a kata, so I'll just generate it statically here
 createItems :: [Item]
-createItems = 
+createItems =
   let cSale = Just (Sale 3 12.00)
   in
-    [ Item  "A" 1 13.00 Nothing
+    [ Item  "C" 1 13.00 Nothing
     , Item  "B" 1 2.99 Nothing
-    , Item  "C" 1 10.00 cSale ]
+    , Item  "A" 1 10.00 cSale ]
