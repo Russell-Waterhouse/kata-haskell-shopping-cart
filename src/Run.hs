@@ -1,5 +1,7 @@
 {-# LANGUAGE NoImplicitPrelude #-}
 {-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE ScopedTypeVariables #-}
+
 module Run (run) where
 
 import Import
@@ -8,9 +10,12 @@ import Item
 run :: RIO App ()
 run = 
   let i = createItems
+      j = show createItems
+      k :: Utf8Builder = "Items: \n"  
   in 
-  logInfo "Items: \n" 
--- ++ (show createItems)
+  logInfo k
+  
+
 
 -- In a real application, this would be from a DB call
 -- but this is just a kata, so I'll just generate it statically here

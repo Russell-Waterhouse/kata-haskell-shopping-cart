@@ -2,6 +2,8 @@ module Item (
     Sale(..)
   , Item(..)
   , sumItem
+  , addItemNameAndPriceToString
+  , prettyPrintItems
   ) where
 
 
@@ -36,3 +38,13 @@ nonSalePriceSum item =
       where
         numNonSaleUnits = (quantity item) `mod` bundleQuantity sale1
 
+prettyPrintItems :: [Item] -> String
+prettyPrintItems xs =
+   foldr addItemNameAndPriceToString "" xs
+
+addItemNameAndPriceToString :: Item -> String -> String
+addItemNameAndPriceToString item s1 = s1 ++ 
+  case sale item of
+    Nothing -> name item ++ ": " ++ show (price item) ++ "\n"
+    Just sale1 -> name item ++ ": " ++ show (price item) ++ "\n  SALE PRICE: " 
+      ++ show (bundleQuantity sale1) ++ " FOR " ++ show (salePrice sale1) ++ "\n"
