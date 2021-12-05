@@ -36,5 +36,3 @@ nonSalePriceSum item =
       where
         numNonSaleUnits = (quantity item) `mod` bundleQuantity sale1
 
-
-
