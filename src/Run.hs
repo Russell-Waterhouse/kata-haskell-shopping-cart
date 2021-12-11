@@ -1,13 +1,10 @@
-{-# LANGUAGE NoImplicitPrelude   #-}
-{-# LANGUAGE OverloadedStrings   #-}
-{-# LANGUAGE ScopedTypeVariables #-}
+{-# LANGUAGE NoImplicitPrelude, OverloadedStrings, ScopedTypeVariables #-}
 
 module Run (run) where
 
 import           Import
 import           Item
 import           Prelude (putStrLn)
-import           RIO
 
 run :: RIO App ()
 run = do
