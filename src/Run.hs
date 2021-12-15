@@ -1,17 +1,18 @@
-{-# LANGUAGE NoImplicitPrelude, OverloadedStrings, ScopedTypeVariables #-}
+{-# LANGUAGE OverloadedStrings   #-}
+{-# LANGUAGE ScopedTypeVariables #-}
 
-module Run (run) where
+module Run (run, parseInput, itemFromName, getFormatString) where
 
+import           Data.Maybe (fromJust)
 import           Import
 import           Item
-import           Prelude (putStrLn)
 
 run :: RIO App ()
 run = do
-  let l = "Items: "
-  logInfo "Displaying Info to User"
-  liftIO $ putStrLn l
-  liftIO $ putStrLn $ prettyPrintItems createItems
+  basket <- liftIO $ getBasket createItems []
+  let total = foldr sumItems 0.0 basket
+  liftIO $ putStrLn (show total)
+
 
 -- In a real application, this would be from a DB call
 -- but this is just a kata, so I'll just generate it statically here
@@ -22,3 +23,58 @@ createItems =
     [ Item  "C" 1 13.00 Nothing
     , Item  "B" 1 2.99 Nothing
     , Item  "A" 1 10.00 cSale ]
+
+
+getFormatString :: String
+getFormatString = "Please enter in the format \"<Name> <quantity>\"\n" ++
+  "Or just press <ENTER> to total your cart\n\n"
+
+
+getBasket :: [Item] -> [Item] -> IO ([Item])
+getBasket options itemsInCart =
+  do
+    liftIO $ putStrLn "Please select from the followng items: "
+    liftIO $ putStrLn $ prettyPrintItems createItems
+    liftIO $ putStrLn getFormatString
+    userInput :: String <- getLine
+    let
+        numInputWords = length $ words userInput
+        parsedItem = parseInput userInput options
+        nullItem = Item "" 0 0.0 Nothing
+    if numInputWords == 0 then
+      return itemsInCart
+    else
+      if (isLeft parsedItem) then
+        do 
+          let errorMessage :: String = fromLeft "UNKNOWN ERROR" parsedItem
+          liftIO $ putStrLn errorMessage
+          getBasket options itemsInCart
+      else
+        getBasket options ((fromRight nullItem parsedItem): itemsInCart )
+
+
+parseInput :: String -> [Item] -> Either String Item
+parseInput input options =
+  let
+    inputWords = words input
+    numInputWords = length inputWords
+    selectedName = inputWords !! 0
+    selectedQuantity = read (inputWords !! 1)
+    correspondingItem = itemFromName selectedName options
+    selectedItem = fromJust correspondingItem
+  in
+    if numInputWords == 2 && isJust correspondingItem then
+      Right (Item selectedName selectedQuantity (price selectedItem) (sale selectedItem))
+    else
+      Left getFormatString
+
+
+itemFromName :: String -> [Item] -> Maybe Item
+itemFromName "" _ = Nothing
+itemFromName _ [] = Nothing
+itemFromName searchStr (x: xs) =
+  if (name x) == searchStr then
+    Just x
+  else
+    itemFromName searchStr xs
+

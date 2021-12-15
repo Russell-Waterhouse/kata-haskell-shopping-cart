@@ -59,6 +59,7 @@ test-suite shopping-cart-test
   main-is: Spec.hs
   other-modules:
       ItemSpec
+      RunSpec
       UtilSpec
       Paths_shopping_cart
   hs-source-dirs:

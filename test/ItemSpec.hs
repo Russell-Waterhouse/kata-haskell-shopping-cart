@@ -19,14 +19,20 @@ spec = let
       it "sale quantity met" $ sumItem i3 `shouldBe` 3.99
       it "sale quantity exceeded remainder" $ sumItem i4 `shouldBe` 8.99
       it "sale quantity exceeded evenly" $ sumItem i5 `shouldBe` 7.98
+    describe "sumItems" $ do
+      it "basic check"  $ (sumItems i1 0) `shouldBe` 5.00
+      it "sale quantity not met" $ (sumItems i2 0) `shouldBe` 5.00
+      it "sale quantity met" $ (sumItems i3 0) `shouldBe` 3.99
+      it "sale quantity exceeded remainder" $ (sumItems i4 0) `shouldBe` 8.99
+      it "sale quantity exceeded evenly" $ (sumItems i5 0) `shouldBe` 7.98
+      it "full list accumulator" $ (sumItems i4 20.0) `shouldBe` 28.99
     describe "addItemNameAndPriceToString" $ do 
       it "basic check" $ addItemNameAndPriceToString i1 "" `shouldBe` "I1: 5.0\n"
       it "sale check" $ addItemNameAndPriceToString i2 "" `shouldBe` 
         "I2: 5.0\n  SALE PRICE: 3 FOR 3.99\n"
     describe "prettyPrintItems" $ do 
       it "basic check" $ prettyPrintItems [i1] `shouldBe` "I1: 5.0\n"
-      it "basic check" $ prettyPrintItems [i1, i1, i1] `shouldBe` "I1: 5.0\nI1: 5.0\nI1: 5.0\n"
-      it "basic check" $ prettyPrintItems [i1, i2, i3] `shouldBe` 
+      it "print 3 same" $ prettyPrintItems [i1, i1, i1] `shouldBe` "I1: 5.0\nI1: 5.0\nI1: 5.0\n"
+      it "print 3 different" $ prettyPrintItems [i1, i2, i3] `shouldBe` 
         "I3: 5.0\n  SALE PRICE: 3 FOR 3.99\nI2: 5.0\n  SALE PRICE: 3 FOR 3.99\nI1: 5.0\n"
-
 

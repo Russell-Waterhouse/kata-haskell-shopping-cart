@@ -4,19 +4,23 @@ module Item (
   , sumItem
   , addItemNameAndPriceToString
   , prettyPrintItems
+  , sumItems
   ) where
 
 data Sale = Sale {
   bundleQuantity :: Int,
   salePrice      :: Float
-} deriving (Show)
+} deriving (Show, Eq)
 
 data Item = Item {
   name     :: String,
   quantity :: Int,
   price    :: Float,
   sale     :: Maybe Sale
-} deriving (Show)
+} deriving (Show, Eq)
+
+sumItems :: Item -> Float -> Float
+sumItems item accumulator = accumulator + (sumItem item)
 
 sumItem :: Item -> Float
 sumItem item = salePriceSum item + nonSalePriceSum item
