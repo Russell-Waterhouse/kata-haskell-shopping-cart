@@ -12,7 +12,7 @@ spec = do
         i1 = (Item "A" 1 1.0 Nothing)
         input = [i1]
         expectedOutput = Right i1
-        expectedErrorOutput = Left getFormatString
+        expectedErrorOutput = Left ("ERROR: " ++ getFormatString ++ "\n\n")
     it "Null Input check" $ (parseInput "" input) `shouldBe` expectedErrorOutput
     it "malformed Input check" $ (parseInput "A" input) `shouldBe` expectedErrorOutput
     it "malformed Input check 2" $ (parseInput "A 1 B" input) `shouldBe` expectedErrorOutput
