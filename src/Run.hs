@@ -31,27 +31,25 @@ getFormatString = "Please enter in the format \"<Name> <quantity>\"\n" ++
 
 
 getBasket :: [Item] -> [Item] -> IO ([Item])
-getBasket options itemsInCart =
-  do
-    liftIO $ putStrLn "Please select from the followng items: "
-    liftIO $ putStrLn $ prettyPrintItems createItems
-    liftIO $ putStrLn getFormatString
-    userInput :: String <- getLine
-    let
-        numInputWords = length $ words userInput
-        parsedItem = parseInput userInput options
-        nullItem = Item "" 0 0.0 Nothing
-    if numInputWords == 0 then
-      return itemsInCart
+getBasket options itemsInCart = do
+  putStrLn "Please select from the followng items: " 
+  putStrLn $ prettyPrintItems createItems 
+  putStrLn getFormatString 
+  userInput :: String <- getLine 
+  let
+      numInputWords = length $ words userInput
+      parsedItem = parseInput userInput options
+      isError = isLeft parsedItem
+      nullItem = Item "" 0 0.0 Nothing
+  if numInputWords == 0 then
+    return itemsInCart
+  else
+    if isError then do 
+      let errorMessage :: String = fromLeft "UNKNOWN ERROR" parsedItem
+      putStrLn ("ERROR: " ++ errorMessage ++ "\n\n")
+      getBasket options itemsInCart
     else
-      if (isLeft parsedItem) then
-        do 
-          let errorMessage :: String = fromLeft "UNKNOWN ERROR" parsedItem
-          liftIO $ putStrLn errorMessage
-          getBasket options itemsInCart
-      else
-        getBasket options ((fromRight nullItem parsedItem): itemsInCart )
-
+      getBasket options ((fromRight nullItem parsedItem): itemsInCart )
 
 parseInput :: String -> [Item] -> Either String Item
 parseInput input options =
@@ -67,7 +65,6 @@ parseInput input options =
       Right (Item selectedName selectedQuantity (price selectedItem) (sale selectedItem))
     else
       Left getFormatString
-
 
 itemFromName :: String -> [Item] -> Maybe Item
 itemFromName "" _ = Nothing
