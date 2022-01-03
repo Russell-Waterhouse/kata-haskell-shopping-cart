@@ -16,9 +16,9 @@ For example, to add 4 items of A to your cart, just type
 For each item, there is either a sale or not a sale. We will illustrate the algorithm with 
 the following shopping cart. 
 
-A 5
-B 3
-C 2
+A 5   
+B 3   
+C 2   
 
 We will assume all of these items are usually 5.00 each, with a sale of 3 for 12.00.   
 A's total will be 22.00 (3 at the sale price and 2 at the regular price)
