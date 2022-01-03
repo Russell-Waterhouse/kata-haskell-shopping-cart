@@ -1,7 +1,9 @@
+{-# LANGUAGE ScopedTypeVariables #-}
 module ItemSpec (spec) where
 
 import           Item
 import           Test.Hspec
+import           Test.Hspec.QuickCheck
 
 spec :: Spec
 spec = let
@@ -47,4 +49,11 @@ spec = let
       it "redundent items list check2" $ aggregate [i1, i1, i1] `shouldBe` [i1'']
       it "redundent items list check3" $ aggregate [i6, i7] `shouldBe` [i8]
       it "redundent items list check4" $ aggregate [i1, i2, i3, i1] `shouldBe` [i1', i2, i3]
+      prop "Aggregates add up" $ \i -> 
+        let
+          testList :: [Item] = replicate i (Item "A" i 5.00 Nothing) 
+          resultList = aggregate testList 
+          expectedQuantity = if null resultList then 0 else quantity (head resultList)
+        in 
+          expectedQuantity `shouldBe` length testList * i 
 
