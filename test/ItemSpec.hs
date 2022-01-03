@@ -14,6 +14,9 @@ spec = let
     i3 = Item "I3" 3 5.00 s2
     i4 = Item "I4" 4 5.00 s2
     i5 = Item "I5" 6 5.00 s2
+    i6 = Item "A" 2 1.00 Nothing
+    i7 = Item "A" 1 1.00 Nothing
+    i8 = Item "A" 3 1.00 Nothing 
   in do
     describe "sumItem" $ do
       it "basic check" $ sumItem i1 `shouldBe` 5.00
@@ -22,12 +25,12 @@ spec = let
       it "sale quantity exceeded remainder" $ sumItem i4 `shouldBe` 8.99
       it "sale quantity exceeded evenly" $ sumItem i5 `shouldBe` 7.98
     describe "sumItems" $ do
-      it "basic check"  $ (sumItems i1 0) `shouldBe` 5.00
-      it "sale quantity not met" $ (sumItems i2 0) `shouldBe` 5.00
-      it "sale quantity met" $ (sumItems i3 0) `shouldBe` 3.99
-      it "sale quantity exceeded remainder" $ (sumItems i4 0) `shouldBe` 8.99
-      it "sale quantity exceeded evenly" $ (sumItems i5 0) `shouldBe` 7.98
-      it "full list accumulator" $ (sumItems i4 20.0) `shouldBe` 28.99
+      it "basic check"  $ sumItems i1 0 `shouldBe` 5.00
+      it "sale quantity not met" $ sumItems i2 0 `shouldBe` 5.00
+      it "sale quantity met" $ sumItems i3 0 `shouldBe` 3.99
+      it "sale quantity exceeded remainder" $ sumItems i4 0 `shouldBe` 8.99
+      it "sale quantity exceeded evenly" $ sumItems i5 0 `shouldBe` 7.98
+      it "full list accumulator" $ sumItems i4 20.0 `shouldBe` 28.99
     describe "addItemNameAndPriceToString" $ do 
       it "basic check" $ addItemNameAndPriceToString i1 "" `shouldBe` "I1: 5.0\n"
       it "sale check" $ addItemNameAndPriceToString i2 "" `shouldBe` 
@@ -42,5 +45,6 @@ spec = let
       it "unique list check" $ aggregate [i1, i2] `shouldBe` [i1, i2]
       it "redundent items list check" $ aggregate [i1, i1] `shouldBe` [i1']
       it "redundent items list check2" $ aggregate [i1, i1, i1] `shouldBe` [i1'']
-      it "redundent items list check2" $ aggregate [i1, i2, i3, i1] `shouldBe` [i1', i2, i3]
+      it "redundent items list check3" $ aggregate [i6, i7] `shouldBe` [i8]
+      it "redundent items list check4" $ aggregate [i1, i2, i3, i1] `shouldBe` [i1', i2, i3]
 

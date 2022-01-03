@@ -10,8 +10,9 @@ import           Item
 run :: RIO App ()
 run = do
   basket <- liftIO $ getBasket createItems []
-  let total = foldr sumItems 0.0 basket
-  liftIO $ putStrLn (show total)
+  let aggregatedItems = aggregate basket
+      total = foldr sumItems 0.0 aggregatedItems
+  liftIO $ print total
 
 
 -- In a real application, this would be from a DB call
@@ -70,7 +71,7 @@ itemFromName :: String -> [Item] -> Maybe Item
 itemFromName "" _ = Nothing
 itemFromName _ [] = Nothing
 itemFromName searchStr (x: xs) =
-  if (name x) == searchStr then
+  if name x == searchStr then
     Just x
   else
     itemFromName searchStr xs

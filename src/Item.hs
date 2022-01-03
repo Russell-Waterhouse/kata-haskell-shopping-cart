@@ -55,13 +55,18 @@ addItemNameAndPriceToString item s1 = s1 ++
 aggregate :: [Item] -> [Item]
 aggregate [] = []
 aggregate [x] = [x]
-aggregate (x: xs) | x `elem` xs =
+aggregate (x: xs) | itemListContainsName x xs=
   let redundantItems = filter (\item -> name x == name item) xs
       otherItems = filter (\item -> name x /= name item) xs
       aggregatedItem = foldr accumulate [x] redundantItems
   in
     aggregatedItem ++ aggregate otherItems
 aggregate (x: xs) = x : aggregate xs
+
+itemListContainsName :: Item -> [Item] -> Bool
+itemListContainsName item1 items = 
+  let sameNameItems = filter (\item -> name item1 == name item) items
+  in not (null sameNameItems)
 
 accumulate :: Item -> [Item] -> [Item]
 accumulate templateItem (nextItem: xs) =
